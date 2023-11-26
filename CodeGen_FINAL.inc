@@ -1014,7 +1014,7 @@ void BeforeRight(TreeElement * Node,int pass,struct status * stat) {
             break;
         case SHIFTEXPRRESTRIGHT:
             if (stat->extrastatus==0) {
-                                                                            //NOVO
+                                                                            
                 Emit (" XOR R4,R4,R4");
                 Emit (" ADD R4,R4,R2");
                 Emit (" LOD R2,R2,R12");
@@ -1025,7 +1025,7 @@ void BeforeRight(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" SHR R2,R2,R4");
             }
             if (stat->extrastatus==LEFTISNUMBER) {
-                                                                            //NOVO
+                                                                            
                 Emit (" LOD R4,R15,R15"); 
                 sprintf (statement," WRD %d",stat->numdata);
                 Emit (statement);
@@ -1035,7 +1035,7 @@ void BeforeRight(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" SHR R2,R2,R4");
             }
             if (stat->extrastatus==LEFTISVAR) {
-                                                                            //NOVO
+                                                                            
                 Emit (" LOD R9,R15,R15");
                 IdentAddr(ident,stat->descendant);
                 sprintf (statement," %s", ident);
@@ -1049,9 +1049,9 @@ void BeforeRight(TreeElement * Node,int pass,struct status * stat) {
             break;
         case CONDEXPRREST:
             Emit (" LOD R15,R15,R15");
-            sprintf(statement,"WRD _CONDEND%p",(void *) Node);             //NOVO
+            sprintf(statement,"WRD _CONDEND%p",(void *) Node);             
             Emit(statement);
-            sprintf(statement,"_CONDELSE%p:",(void *) Node);               //NOVO
+            sprintf(statement,"_CONDELSE%p:",(void *) Node);               
             Emit(statement);
             break;
         }
@@ -1083,7 +1083,7 @@ void BeforeLateLeft(TreeElement * Node,int pass,struct status * stat) {
             case ASSIGNEXPRMUL:
             case ASSIGNEXPRASSIGN:
                 if (stat->extrastatus==0)
-                                                                    //NOVO
+                                                                    
                     Emit (" SUB R12,R12,R1");
                     Emit (" STO R2,R2,R12");
                 break;
@@ -1136,14 +1136,14 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                     dt=N->GetIdentTableElement()->getDataType();
                     if (dt==INTEGER || dt==POINTER) {
                       IdentAddr(ia,N);
-                                                                        //NOVO
+                                                                        
                       Emit (" LOD R6,R15,R15");
                       sprintf(statement," WRD %s ",ia);
                       Emit (statement);
                       Emit (" LOD R2,R6,R6");
                     } else
                     if (dt==ARRAY) {
-                                                                        //NOVO
+                                                                        
                       Emit (" LOD R6,R15,R15");
                       IdentAddr(ia,N);
                       sprintf(statement," WRD %s ",ia);
@@ -1157,26 +1157,26 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                        
                     break;
                 case NUMBER:
-                                                                        //NOVO
+                                                                        
                     Emit (" LOD R2,R15,R15");                                                    
                     sprintf(statement," WRD %d ",N->GetIntVal());
                     Emit (statement);
                     break;
                 case STRING:
-                                                                        //NOVO
+                                                                        
                     Emit (" LOD R2,R15,R15");                                                    
                     sprintf(statement," WRD _SL%p",(void *) N);
                     Emit (statement);
                     break;
                 case CHAR:
-                                                                        //NOVO
+                                                                        
                     Emit (" LOD R2,R15,R15");                                                    
                     sprintf(statement," WRD %d ",N->GetCharVal());
                     Emit (statement);
 
                     break;
                 case ONUMBER:
-                                                                        //NOVO
+                                                                        
                     Emit (" LOD R2,R15,R15");                                                    
                     sprintf(statement," WRD %d ",N->GetOctalVal());
                     Emit (statement);
@@ -1211,16 +1211,16 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             casesp--;
             break;
         case BREAKSTATEMENT:
-            Emit (" LOD R15,R15,R15");                                      //NOVO
+            Emit (" LOD R15,R15,R15");                                      
             sprintf(statement," WRD %s", breakstack[breaksp]);
             Emit (statement);
             break;
         case CONTINUESTATEMENT:
-            Emit (" LOD R15,R15,R15");                                      //NOVO
+            Emit (" LOD R15,R15,R15");                                      
             sprintf(statement," WRD %s", continuestack[continuesp]);
             Emit (statement);
             break;
-        case CASELABEL:                                                     //NOVO           
+        case CASELABEL:                                                                
             
             Emit (" LOD R9,R15,R15"); 
             sprintf(statement," WRD _DOCASE%s_%d",casestack[casesp].casename,casestack[casesp].labelcount);           
@@ -1233,7 +1233,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             break;       
         case STATEMENTLABELS:
             if (casesp>0) {
-              Emit (" LOD R15,R15,R15");                                    //NOVO
+              Emit (" LOD R15,R15,R15");                                    
               sprintf(statement," WRD _CASE%s_%d",casestack[casesp].casename,casestack[casesp].labelcount+1);           
               Emit(statement);
               sprintf(statement,"_DOCASE%s_%d:",casestack[casesp].casename,casestack[casesp].labelcount);           
@@ -1247,14 +1247,14 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             Emit(statement);
              break;
 
-        case GOTOSTATEMENT:                                                     //NOVO
+        case GOTOSTATEMENT:                                                     
             if (stat->extrastatus==LEFTISVAR) {
                 Emit (" LOD R15,R15,R15");
                 sprintf(statement," WRD _%s",stat->descendant->GetIdentName());
                 Emit(statement);
              }
             break;           
-        case WHILESTATEMENT:                                                    //NOVO
+        case WHILESTATEMENT:                                                    
             Emit (" LOD R15,R15,R15");
             sprintf(statement," WRD _START%p",(void *) Node);
             Emit(statement);
@@ -1263,12 +1263,12 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             breaksp--;
             continuesp--;
             break;
-        case RETURNSTATEMENT:                                                  //NOVO
+        case RETURNSTATEMENT:                                                  
             Emit (" LOD R8,R8,R12");
             Emit (" ADD R12,R12,R1");
             Emit (" ORA R15,R8,R8");
             break;
-        case POSTFIXCALL:                                                      //NOVO
+        case POSTFIXCALL:                                                      
             Emit (" LOD R9,R15,R15");
             sprintf(statement," WRD %s",functionstack[functionsp].funname);
             Emit(statement);
@@ -1278,13 +1278,13 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             break;
            
         case ASSIGNEXPRASSIGN:
-            if (stat->extrastatus==0) {                            //NOVO
+            if (stat->extrastatus==0) {                            
                 Emit (" LOD R2,R2,R12");
                 Emit (" ADD R12,R12,R1");
                 Emit (" STO R10,R6,R2");
 
             }
-            if (stat->extrastatus==LEFTISVAR) {                    //NOVO
+            if (stat->extrastatus==LEFTISVAR) {                    
                 IdentAddr(ident,stat->descendant);
                 Emit (" LOD R9,R15,R15");
                 sprintf (statement," WRD %s",ident);
@@ -1293,7 +1293,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             }
             break;
         case ASSIGNEXPRMUL:
-            if (stat->extrastatus==0) {                             //NOVO
+            if (stat->extrastatus==0) {                             
                 
                 Emit (" LOD R2,R2,R12");
                 Emit (" ADD R12,R12,R1");
@@ -1302,7 +1302,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" MUL R2,R2,R10");
                 Emit (" STO R10,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {                     //NOVO
+            if (stat->extrastatus==LEFTISVAR) {                     
                 IdentAddr(ident,stat->descendant);
                 Emit (" LOD R10,R15,R15");
                 sprintf (statement,"WRD %s",ident);
@@ -1311,7 +1311,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" STO R10,R2,R10");
             }
             break;
-        case ASSIGNEXPRDIV:                                     //NOVO
+        case ASSIGNEXPRDIV:                                     
             if (stat->extrastatus==0) {
             
                 Emit (" LOD R3,R3,R12");
@@ -1343,7 +1343,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {                 //NOVO
+            if (stat->extrastatus==LEFTISVAR) {                 
                 Emit (" XOR R3,R3,R3");
                 Emit (" ADD R3,R3,R2");
                 Emit (" LOD R9,R15,R15");
@@ -1382,7 +1382,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" STO R2,R2,R10");
             }
             break;
-        case ASSIGNEXPRMOD:                                     //NOVO
+        case ASSIGNEXPRMOD:                                     
             if (stat->extrastatus==0) {
                 
                 Emit (" LOD R3,R3,R12");
@@ -1414,7 +1414,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" ORA R2,R4,R4");
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {                 //NOVO
+            if (stat->extrastatus==LEFTISVAR) {                 
                 Emit (" XOR R3,R3,R3");
                 Emit (" ADD R3,R3,R2");
                 
@@ -1455,7 +1455,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             }
             break;
         case ASSIGNEXPRADD:
-            if (stat->extrastatus==0) {                             //NOVO                                  //ISPOD OK
+            if (stat->extrastatus==0) {                                                               //ISPOD OK
 
                 Emit (" LOD R2,R2,R12");
                 Emit (" ADD R12,R12,R1");
@@ -1463,7 +1463,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" ADD R2,R2,R10");
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {                     //NOVO
+            if (stat->extrastatus==LEFTISVAR) {                     
                 Emit (" LOD R10,R15,R15");
                 IdentAddr(ident,stat->descendant);
                 sprintf (statement," WRD %s",ident);
@@ -1474,14 +1474,14 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             }
             break;
         case ASSIGNEXPRSUB:
-            if (stat->extrastatus==0) {                             //NOVO
+            if (stat->extrastatus==0) {                             
                 
                 Emit (" LOD R3,R3,R12");
                 Emit (" ADD R12,R12,R1");
                 Emit (" SUB R2,R2,R3");
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {                     //NOVO
+            if (stat->extrastatus==LEFTISVAR) {                     
                 Emit (" LOD R10,R15,R15");
                 IdentAddr(ident,stat->descendant);
                 sprintf (statement," WRD %s",ident);
@@ -1492,14 +1492,14 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             }
             break;
         case ASSIGNEXPRAND:
-            if (stat->extrastatus==0) {                             //NOVO
+            if (stat->extrastatus==0) {                             
                 Emit (" LOD R2,R2,R12");
                 Emit (" ADD R12,R12,R1");
                 Emit (" LOD R10,R10,R6");
                 Emit (" AND R2,R2,R10");
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {                     //NOVO
+            if (stat->extrastatus==LEFTISVAR) {                     
                 Emit (" LOD R10,R15,R15");
                 IdentAddr(ident,stat->descendant);
                 sprintf (statement," WRD %s",ident);
@@ -1509,7 +1509,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" STO R2,R2,R10");
             }
             break;
-        case ASSIGNEXPRXOR:                                         //NOVO
+        case ASSIGNEXPRXOR:                                         
             if (stat->extrastatus==0) {
                 Emit (" LOD R2,R2,R12");
                 Emit (" ADD R12,R12,R1");
@@ -1517,7 +1517,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" XOR R2,R2,R10");
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {                     //NOVO
+            if (stat->extrastatus==LEFTISVAR) {                     
                 Emit (" LOD R10,R15,R15");
                 IdentAddr(ident,stat->descendant);
                 sprintf (statement," WRD %s",ident);
@@ -1527,7 +1527,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" STO R2,R2,R10");
             }
             break;
-        case ASSIGNEXPROR:                                          //NOVO
+        case ASSIGNEXPROR:                                          
             if (stat->extrastatus==0) {
                 Emit (" LOD R2,R2,R12");
                 Emit (" ADD R12,R12,R1");
@@ -1535,7 +1535,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" ORA R2,R2,R10");
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {                     //NOVO
+            if (stat->extrastatus==LEFTISVAR) {                     
                 Emit (" LOD R10,R15,R15");
                 IdentAddr(ident,stat->descendant);
                 sprintf (statement," WRD %s",ident);
@@ -1557,7 +1557,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" SHR R2,R2,R4");
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {                             //NOVO
+            if (stat->extrastatus==LEFTISVAR) {                             
                 
                 Emit (" XOR R4,R4,R4");
                 Emit (" ADD R4,R4,R2");
@@ -1573,7 +1573,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" STO R2,R2,R10");
             }
             break;
-        case ASSIGNEXPRRSHIFT:                                              //NOVO
+        case ASSIGNEXPRRSHIFT:                                              
             if (stat->extrastatus==0) {
                 Emit (" XOR R4,R4,R4");
                 Emit (" ADD R4,R4,R2");
@@ -1585,7 +1585,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" SHR R2,R2,R4");
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {                             //NOVO
+            if (stat->extrastatus==LEFTISVAR) {                             
                 Emit (" XOR R4,R4,R4");
                 Emit (" ADD R4,R4,R2");
                 Emit (" LOD R10,R15,R15");
@@ -1601,14 +1601,14 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             }
             break;
         case ASSIGNEXPRLESS:
-            if (stat->extrastatus==0) {                     //NOVO
+            if (stat->extrastatus==0) {                     
                 Emit (" LOD R2,R2,R12");
                 Emit (" ADD R12,R12,R1");
                 Emit (" LOD R10,R10,R6");
                 Emit (" LTS R2,R6,R2");
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {             //NOVO
+            if (stat->extrastatus==LEFTISVAR) {             
                 Emit (" LOD R9,R9,R15");
                 IdentAddr(ident,stat->descendant);
                 sprintf (statement,"%s",ident);
@@ -1618,7 +1618,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" STO R2,R2,R9");
             }
             break;
-        case ASSIGNEXPRLESSEQ:                              //NOVO
+        case ASSIGNEXPRLESSEQ:                              
             if (stat->extrastatus==0) {
                 Emit (" LOD R2,R2,R12");
                 Emit (" ADD R12,R12,R1");
@@ -1627,7 +1627,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" XOR R2,R2,R1");
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {             //NOVO
+            if (stat->extrastatus==LEFTISVAR) {             
                 Emit (" LOD R9,R9,R15");
                 IdentAddr(ident,stat->descendant);
                 sprintf (statement," WRD %s",ident);
@@ -1638,7 +1638,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" STO R2,R2,R6");
             }
             break;
-        case ASSIGNEXPRGREATER:                             //NOVO
+        case ASSIGNEXPRGREATER:                             
             if (stat->extrastatus==0) {
                 Emit (" LOD R2,R2,R12");
                 Emit (" ADD R12,R12,R1");
@@ -1646,7 +1646,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" GTS R2,R6,R2");
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {             //NOVO
+            if (stat->extrastatus==LEFTISVAR) {             
                 Emit (" LOD R9,R9,R15");
                 IdentAddr(ident,stat->descendant);
                 sprintf (statement," WRD %s",ident);
@@ -1657,7 +1657,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             }
             break;
         case ASSIGNEXPRGREATEREQ:
-            if (stat->extrastatus==0) {                     //NOVO
+            if (stat->extrastatus==0) {                     
                 Emit (" LOD R2,R2,R12");
                 Emit (" ADD R12,R12,R1");
                 Emit (" LOD R10,R10,R6");
@@ -1665,7 +1665,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" XOR R2,R2,R1");
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {             //NOVO
+            if (stat->extrastatus==LEFTISVAR) {             
                 Emit (" LOD R9,R9,R15");
                 IdentAddr(ident,stat->descendant);
                 sprintf (statement," WRD %s",ident);
@@ -1677,14 +1677,14 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             }
             break;
         case ASSIGNEXPREQUAL:
-            if (stat->extrastatus==0) {                     //NOVO
+            if (stat->extrastatus==0) {                     
                 Emit (" LOD R2,R2,R12");
                 Emit (" ADD R12,R12,R1");
                 Emit (" LOD R10,R10,R6");
                 Emit (" EQU R2,R6,R2");
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {             //NOVO
+            if (stat->extrastatus==LEFTISVAR) {             
                 Emit (" LOD R9,R9,R15");
                 IdentAddr(ident,stat->descendant);
                 sprintf (statement," WRD %s",ident);
@@ -1695,7 +1695,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             }
             break;
         case ASSIGNEXPRNOTEQUAL:
-            if (stat->extrastatus==0) {                 //NOVO
+            if (stat->extrastatus==0) {                 
                 Emit (" LOD R2,R2,R12");
                 Emit (" ADD R12,R12,R1");
                 Emit (" LOD R10,R10,R6");
@@ -1703,7 +1703,7 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" XOR R2,R2,R1");
                 Emit (" STO R2,R2,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {         //NOVO
+            if (stat->extrastatus==LEFTISVAR) {         
                 Emit (" LOD R9,R9,R15");
                 IdentAddr(ident,stat->descendant);
                 sprintf (statement," WRD %s",ident);
@@ -1715,10 +1715,10 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             }
             break;
         case ADDRUNARYEXPR:
-            if (stat->extrastatus==0) {                    //NOVO
+            if (stat->extrastatus==0) {                    
                 Emit (" ORA R2,R6,R6");
             }
-            if (stat->extrastatus==LEFTISVAR) {             //NOVO
+            if (stat->extrastatus==LEFTISVAR) {             
                 IdentAddr(ident,stat->descendant);
                 Emit (" LOD R10,R15,R15");
                 sprintf (statement," WRD %s",ident);
@@ -1727,44 +1727,44 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
             }
             break;
         case MINUSUNARYEXPR:
-            if (stat->extrastatus==0) {                     //NOVO
+            if (stat->extrastatus==0) {                     
                 Emit (" ORA R3,R2,R2");
                 Emit (" SUB R2,R2,R3");
                 Emit (" SUB R2,R2,R3");
             }
-            if (stat->extrastatus==LEFTISNUMBER) {          //NOVO
+            if (stat->extrastatus==LEFTISNUMBER) {          
                 Emit (" LOD R2,R15,R15");
                 sprintf (statement," WRD -%d",stat->numdata);
                 Emit (statement);
             }
             break;
-        case POINTERUNARYEXPR:                              //NOVO
+        case POINTERUNARYEXPR:                              
             Emit (" XOR R6,R6,R6");
             Emit (" ADD R6,R6,R2");
             Emit (" LOD R2,R2,R6");
             break;
-        case NOTUNARYEXPR:                                  //NOVO
+        case NOTUNARYEXPR:                                  
             Emit (" LOD R3,R15,R15");
             Emit (" WRD -1");
             Emit (" XOR R2,R2,R3");
             break;
-        case LOGNOTUNARYEXPR:                               //NOVO
+        case LOGNOTUNARYEXPR:                               
             Emit (" XOR R2,R2,R1");
             Emit (" AND R2,R2,R1");
             break;
-        case INCUNARYEXPR:                                 //NOVO
+        case INCUNARYEXPR:                                 
             Emit (" LOD R10,R10,R6");
             Emit (" ADD R10,R10,R1");
             Emit (" STO R10,R10,R6");
             Emit (" LOD R2,R2,R6");
             break;
-        case DECUNARYEXPR:                                 //NOVO
+        case DECUNARYEXPR:                                 
             Emit (" LOD R10,R10,R6");
             Emit (" SUB R10,R10,R1");
             Emit (" STO R10,R10,R6");
             Emit (" LOD R2,R2,R6");
             break;
-        case POSTFIXINDEX:                                  //NOVO
+        case POSTFIXINDEX:                                  
             if (stat->extrastatus==0) {
                 Emit (" LOD R6,R6,R12");
                 Emit (" ADD R12,R12,R1");
@@ -1774,13 +1774,13 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
                 Emit (" LOD R2,R2,R6");
             }
             break;
-        case POSTFIXINC:                                    //NOVO
+        case POSTFIXINC:                                    
             Emit (" LOD R2,R2,R6");
             Emit (" LOD R10,R10,R6");
             Emit (" ADD R10,R10,R1");
             Emit (" STO R10,R10,R6");
             break;
-        case POSTFIXDEC:                                    //NOVO
+        case POSTFIXDEC:                                    
             Emit (" LOD R2,R2,R6");
             Emit (" LOD R10,R10,R6");
             Emit (" SUB R10,R10,R1");
@@ -1788,12 +1788,12 @@ void AfterChildVisit(TreeElement * Node,int pass,struct status * stat) {
 
             break;
         case ARGEXPRLISTREST:
-        case ARGEXPRLIST:                                  //NOVO
+        case ARGEXPRLIST:                                  
             functionstack[functionsp].params++;
             Emit (" SUB R12,R12,R1");
             Emit (" STO R2,R2,R12");
             break;
-        case FUNCTIONBODY:                                 //NOVO
+        case FUNCTIONBODY:                                 
             Emit (" ORA R12,R11,R11");
             Emit (" LOD R2,R2,R11");
             Emit (" ADD R11,R11,R1");
